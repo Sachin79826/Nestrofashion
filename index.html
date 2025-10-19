@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nestro Fashion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <!-- Preload main hero image to improve LCP -->
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1552642986-ccb41e7059e7?auto=format&fit=crop&w=1600&q=80">
+  <style>
+    :root{
+      --primary:#826F66;
+      --secondary:#A4927C;
+      --accent:#E6B89C;
+      --dark:#2F231D;
+      --light:#F5F2ED;
+      --muted:#9B8579;
+      --warm:#D4BFB3
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Montserrat,system-ui,Arial}
+    body{background:var(--light);color:var(--dark);line-height:1.4}
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:20px 40px;
+      background:white;
+      box-shadow:0 2px 10px rgba(0,0,0,0.05)
+    }
+    .logo{font-weight:700;color:var(--green);font-size:1.25rem}
+    nav a{margin-left:20px;text-decoration:none;color:#333;font-weight:600}
+
+    /* Hero / slider */
+    .hero {
+      padding: 0;
+      background: var(--light);
+    }
+    .model-slider {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .slides {
+      display: flex;
+      transition: transform .8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .slide {
+      min-width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .slide img {
+      width: 100%;
+      height: 80vh;
+      object-fit: cover;
+    }
+    .slide-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 40px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      color: white;
+      text-align: left;
+    }
+    .slide-content h2 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .slide-content p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      opacity: 0.9;
+      max-width: 600px;
+    }
+
+      .slider-nav {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
+        display: flex;
+        gap: 10px;
+        z-index: 2;
+      }
+      .nav-dot {
+        width: 12px;
+        height: 12px;
+        border: 2px solid white;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.3s ease;
+      }
+      .nav-dot.active {
+        background: white;
+        transform: scale(1.2);
+      }
+
+      @media (max-width: 768px) {
+        .slide-content {
+          padding: 20px;
+        }
+        .slider-nav {
+          right: 20px;
+          bottom: 15px;
+        }
+      }
+
+    /* Products showcase */
+    .products {
+      padding: 60px 20px;
+      background: white;
+    }
+    .products h2 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    .products h2:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--secondary);
+    }
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+    .product-img {
+      position: relative;
+      overflow: hidden;
+      padding-top: 125%; /* 4:5 aspect ratio */
+    }
+    .product-img img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-img img {
+      transform: scale(1.05);
+    }
+    .product-info {
+      padding: 20px;
+      background: white;
+    }
+    .product-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .product-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    .product-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+    .btn.outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn.outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Checkout modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal.open{display:flex}
+    .modal-content{background:#fff;border-radius:12px;max-width:540px;width:100%;padding:18px;max-height:90vh;overflow:auto}
+    .modal-content h3{color:var(--dark);margin-bottom:8px}
+    .form-row{display:flex;gap:8px}
+    .form-row input,textarea,select{flex:1;padding:10px;border:1px solid #eee;border-radius:8px;margin-bottom:10px}
+    .form-row input::placeholder, textarea::placeholder{color:#b8a89f}
+    .qr{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .qr img{width:120px;height:120px;object-fit:contain;border-radius:6px}
+
+    @media (max-width: 600px) {
+      .form-row { flex-direction: column; }
+      .qr { flex-direction: column; align-items: flex-start; }
+      .qr img { width: 100px; height: 100px; }
+      .modal-content { padding: 14px; }
+    }
+
+    /* Reviews */
+    .reviews{padding:24px 20px;background:#fafafa}
+    .review-wrap{max-width:900px;margin:0 auto;position:relative}
+    .review{display:none;padding:18px;background:#fff;border-radius:8px;box-shadow:0 6px 12px rgba(0,0,0,0.06)}
+    .review.active{display:block}
+    .review p{font-size:1rem;margin-bottom:8px}
+    .review .who{color:var(--muted)}
+
+    footer{padding:18px 20px;background:var(--green);color:#fff;margin-top:20px}
+    .footer-grid{display:flex;justify-content:space-between;gap:12px;max-width:1100px;margin:0 auto}
+    .social a{color:#fff;margin-right:8px;text-decoration:none}
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .showcase { padding: 20px; gap: 20px; }
+    }
+    @media (max-width: 1000px) {
+      .showcase { grid-template-columns: repeat(2, 1fr); }
+      .slide img { height: 320px; }
+      .products h2 { font-size: 1.8rem; }
+    }
+    @media (max-width: 768px) {
+      header { padding: 16px 20px; }
+      nav { display: none; }
+      .showcase { grid-template-columns: 1fr; max-width: 450px; }
+      .product-card { max-width: 100%; }
+      .slide img { height: 280px; }
+      .modal-content { padding: 16px; }
+      .product-actions { flex-direction: column; }
+      .btn { width: 100%; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .products { padding: 40px 15px; }
+      .showcase { padding: 10px; }
+      .slide img { height: 220px; }
+      .product-img { padding-top: 100%; }
+      .product-info { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Nestro Fashion</div>
+    <nav>
+      <a href="#story">Our Story</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="model-slider" id="modelSlider">
+        <div class="slides" id="slides">
+          <div class="slide">
+      <img src="https://images.unsplash.com/photo-1552642986-ccb41e7059e7?auto=format&fit=crop&w=1200&q=80" 
+        srcset="https://images.unsplash.com/photo-1552642986-ccb41e7059e7?auto=format&fit=crop&w=600&q=60 600w, https://images.unsplash.com/photo-1552642986-ccb41e7059e7?auto=format&fit=crop&w=1200&q=80 1200w, https://images.unsplash.com/photo-1552642986-ccb41e7059e7?auto=format&fit=crop&w=1600&q=80 1600w"
+        sizes="(max-width: 768px) 100vw, 1200px" loading="lazy" alt="Couple Winter Collection">
+            <div class="slide-content">
+              <h2>Winter Collection 2025</h2>
+              <p>Discover our new range of premium hoodies designed for style and comfort</p>
+            </div>
+          </div>
+          <div class="slide">
+      <img src="https://images.unsplash.com/photo-1549062572-544a64fb0c56?auto=format&fit=crop&w=1200&q=80" 
+        srcset="https://images.unsplash.com/photo-1549062572-544a64fb0c56?auto=format&fit=crop&w=600&q=60 600w, https://images.unsplash.com/photo-1549062572-544a64fb0c56?auto=format&fit=crop&w=1200&q=80 1200w, https://images.unsplash.com/photo-1549062572-544a64fb0c56?auto=format&fit=crop&w=1600&q=80 1600w"
+        sizes="(max-width: 768px) 100vw, 1200px" loading="lazy" alt="Urban Style">
+            <div class="slide-content">
+              <h2>Urban Essentials</h2>
+              <p>Classic tees and hoodies that define modern streetwear</p>
+            </div>
+          </div>
+          <div class="slide">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80" 
+        srcset="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=60 600w, https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80 1200w, https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=80 1600w"
+        sizes="(max-width: 768px) 100vw, 1200px" loading="lazy" alt="Casual Collection">
+            <div class="slide-content">
+              <h2>Casual Comfort</h2>
+              <p>Effortless style for everyday moments</p>
+            </div>
+          </div>
+          <div class="slide">
+      <img src="https://images.unsplash.com/photo-1506634572416-48cdfe530110?auto=format&fit=crop&w=1200&q=80" 
+        srcset="https://images.unsplash.com/photo-1506634572416-48cdfe530110?auto=format&fit=crop&w=600&q=60 600w, https://images.unsplash.com/photo-1506634572416-48cdfe530110?auto=format&fit=crop&w=1200&q=80 1200w, https://images.unsplash.com/photo-1506634572416-48cdfe530110?auto=format&fit=crop&w=1600&q=80 1600w"
+        sizes="(max-width: 768px) 100vw, 1200px" loading="lazy" alt="Summer Collection">
+            <div class="slide-content">
+              <h2>Summer Essentials</h2>
+              <p>Light, breathable fabrics for the perfect summer look</p>
+            </div>
+          </div>
+          <!-- Emigrant hoodie (attached asset) -->
+          <div class="slide">
+            <div class="hero-brand" style="position:absolute;top:0;left:0;width:100%;background:rgba(130,111,102,0.85);color:#fff;font-size:2.2rem;font-weight:700;padding:18px 0 8px 0;text-align:center;z-index:2;letter-spacing:2px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">Nestro Fashion</div>
+            <img src="./emigrant_hoodie.jpg" alt="Emigrant Hoodie" style="object-fit:cover;object-position:top center;height:80vh;width:100%;">
+            <div class="slide-content">
+              <h2>Emigrant Hoodie</h2>
+              <p>Limited edition printed hoodie — premium comfort and style.</p>
+            </div>
+          </div>
+        </div>
+        <div class="slider-nav">
+          <button class="nav-dot active" data-index="0"></button>
+          <button class="nav-dot" data-index="1"></button>
+          <button class="nav-dot" data-index="2"></button>
+          <button class="nav-dot" data-index="3"></button>
+          <button class="nav-dot" data-index="4"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="products">
+      <h2>New Arrivals</h2>
+      <div class="showcase" id="productGrid">
+        <div class="product-card">
+          <div class="product-img">
+            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=800&q=80" loading="lazy" alt="Premium Winter Hoodie">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Premium Winter Hoodie</h3>
+            <div class="product-price">₹2,499</div>
+            <div class="product-actions">
+              <button class="btn" data-id="1">Buy Now</button>
+              <button class="btn outline" data-id="1">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img">
+            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80" loading="lazy" alt="Classic White Tee">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Classic White Tee</h3>
+            <div class="product-price">₹899</div>
+            <div class="product-actions">
+              <button class="btn" data-id="2">Buy Now</button>
+              <button class="btn outline" data-id="2">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img">
+            <img src="https://images.unsplash.com/photo-1578681994506-b8f463449011?auto=format&fit=crop&w=800&q=80" loading="lazy" alt="Urban Street Hoodie">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Urban Street Hoodie</h3>
+            <div class="product-price">₹1,999</div>
+            <div class="product-actions">
+              <button class="btn" data-id="3">Buy Now</button>
+              <button class="btn outline" data-id="3">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img">
+            <img src="./emigrant_hoodie.jpg" alt="Emigrant Hoodie">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Emigrant Hoodie (Limited)</h3>
+            <div class="product-price">₹2,799</div>
+            <div class="product-actions">
+              <button class="btn" data-id="4">Buy Now</button>
+              <button class="btn outline" data-id="4">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reviews">
+      <div class="review-wrap">
+        <div class="review active">
+          <p>"Loved the hoodie – warm and comfy. Fits perfectly."</p>
+          <div class="who">— S. Kapoor</div>
+        </div>
+        <div class="review">
+          <p>"T-shirt quality is excellent and prints are sharp."</p>
+          <div class="who">— Meera P.</div>
+        </div>
+        <div class="review">
+          <p>"Great customer service and fast shipping."</p>
+          <div class="who">— Aditya R.</div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+          <button id="revPrev" class="btn">Prev</button>
+          <button id="revNext" class="btn">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="story" style="padding:20px;max-width:900px;margin:0 auto">
+      <h3>Our Story</h3>
+      <p style="color:#555;margin-top:8px">Nestro Fashion brings comfort-forward everyday wear with minimal design. We focus on eco-friendly fabrics and durable construction.</p>
+    </section>
+
+    <section id="contact" style="padding:20px;max-width:900px;margin:0 auto">
+      <h3>Contact Us</h3>
+      <p style="color:#555;margin-top:8px">Email: support@nestro.example (demo)</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <strong>Nestro Fashion</strong>
+        <div style="margin-top:8px;font-size:.95rem">About us · Return/Refund Policy</div>
+      </div>
+      <div class="social">
+        <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="#" target="_blank" rel="noopener noreferrer">Twitter</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Checkout modal (reused for quick checkout) -->
+  <div class="modal" id="checkoutModal">
+    <div class="modal-content">
+      <h3>Quick Checkout</h3>
+      <div class="qr">
+        <img src="./paxton_upi_qr.png" alt="UPI QR for Paxton" style="width:140px;height:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+        <div>
+          <p style="font-weight:600;margin-bottom:4px">UPI ID: paxton6830244-1@oksbi</p>
+          <p>Scan QR to pay with any UPI app</p>
+          <div style="margin-top:8px">
+            <label style="font-weight:600">Payment method:</label><br>
+            <label><input type="radio" name="payment_mode" value="UPI" checked> UPI (Scan QR)</label>
+            <label style="margin-left:12px"><input type="radio" name="payment_mode" value="COD"> Cash on Delivery</label>
+          </div>
+        </div>
+      </div>
+      <form id="checkoutForm">
+        <input type="text" id="buyerName" placeholder="Full name" required>
+        <input type="email" id="buyerEmail" placeholder="Email" required>
+        <input type="tel" id="buyerPhone" placeholder="Phone" required>
+        <div class="form-row">
+          <input type="text" id="street" placeholder="Street address" required>
+        </div>
+        <div class="form-row">
+          <input type="text" id="city" placeholder="City" required>
+          <input type="text" id="state" placeholder="State" required>
+        </div>
+        <div class="form-row">
+          <input type="text" id="pincode" placeholder="Pincode" required>
+        </div>
+        <input type="hidden" name="product_info" id="product_info">
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button type="submit" class="btn">Place Order</button>
+          <button type="button" id="modalClose" class="btn" style="background:#eee;color:#333">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Product data
+    const products = [
+      {id: 1, name: 'Premium Winter Hoodie', price: 2499, img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea'},
+      {id: 2, name: 'Classic White Tee', price: 899, img: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27'},
+      {id: 3, name: 'Urban Street Hoodie', price: 1999, img: 'https://images.unsplash.com/photo-1578681994506-b8f463449011'},
+      {id: 4, name: 'Emigrant Hoodie (Limited)', price: 2799, img: './emigrant_hoodie.jpg'}
+    ];
+
+    // Simple slider auto-advance every 2s
+    const slidesEl = document.getElementById('slides');
+      const dots = document.querySelectorAll('.nav-dot');
+      let idx = 0;
+      const total = slidesEl.children.length;
+
+      function moveSlider(n) {
+        slidesEl.style.transform = `translateX(-${n*100}%)`;
+        dots.forEach(dot => dot.classList.remove('active'));
+        dots[n].classList.add('active');
+      }
+
+      // Auto advance
+      let slideInterval = setInterval(nextSlide, 3000);
+
+      function nextSlide() {
+        idx = (idx + 1) % total;
+        moveSlider(idx);
+      }
+
+      // Manual navigation
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          clearInterval(slideInterval);
+          idx = parseInt(dot.dataset.index);
+          moveSlider(idx);
+          slideInterval = setInterval(nextSlide, 3000);
+        });
+      });
+
+      // Pause on hover
+      slidesEl.addEventListener('mouseenter', () => clearInterval(slideInterval));
+      slidesEl.addEventListener('mouseleave', () => {
+        slideInterval = setInterval(nextSlide, 3000);
+      });
+
+    // Reviews simple
+    const reviews = document.querySelectorAll('.review');let rIndex=0;
+    document.getElementById('revPrev').addEventListener('click',()=>{reviews[rIndex].classList.remove('active');rIndex=(rIndex-1+reviews.length)%reviews.length;reviews[rIndex].classList.add('active')});
+    document.getElementById('revNext').addEventListener('click',()=>{reviews[rIndex].classList.remove('active');rIndex=(rIndex+1)%reviews.length;reviews[rIndex].classList.add('active')});
+
+    // Checkout modal wiring
+    const checkoutModal = document.getElementById('checkoutModal');
+    const checkoutForm = document.getElementById('checkoutForm');
+    const productInfoInput = document.getElementById('product_info');
+
+    // Open modal when a Buy Now button is clicked
+    document.querySelectorAll('.btn[data-id]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = Number(btn.getAttribute('data-id'));
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+        productInfoInput.value = `${product.name} - ₹${product.price}`;
+        // optionally prefill buyer name/email if saved
+        checkoutModal.classList.add('open');
+        // scroll modal top on mobile
+        checkoutModal.querySelector('.modal-content').scrollTop = 0;
+      });
+    });
+
+    // Close modal
+    document.getElementById('modalClose').addEventListener('click', () => checkoutModal.classList.remove('open'));
+    checkoutModal.addEventListener('click', (e) => { if (e.target === checkoutModal) checkoutModal.classList.remove('open'); });
+
+    checkoutForm.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      // Collect fields
+      const name = document.getElementById('buyerName').value.trim();
+      const email = document.getElementById('buyerEmail').value.trim();
+      const phone = document.getElementById('buyerPhone').value.trim();
+      const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const state = document.getElementById('state').value.trim();
+      const pincode = document.getElementById('pincode').value.trim();
+      const productInfo = productInfoInput.value || 'No product selected';
+
+  const addressFull = `Street: ${street}; City: ${city}; State: ${state}; Pincode: ${pincode}`;
+  const paymentMode = (document.querySelector('input[name="payment_mode"]:checked') || {}).value || 'UPI';
+  const subject = encodeURIComponent('New order from Nestro Fashion');
+  const bodyText = `Order: ${productInfo}\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nAddress: ${addressFull}\nPayment method: ${paymentMode}`;
+      const body = encodeURIComponent(bodyText);
+      // mailto to admin (replace with real admin address)
+      const adminEmail = 'admin@nestro.example';
+      // open mail client with order details
+      window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
+      checkoutModal.classList.remove('open');
+      alert('Order prepared in your email client. Please send to complete (demo).');
+    });
+
+  </script>
+</body>
+</html>
